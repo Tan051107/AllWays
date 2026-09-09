@@ -1,0 +1,6 @@
+{
+  "name": "AllWays",
+  "description": "Accessible barrier-free group travel companion with live step-free routing, adaptive group pacing, smart debt settlement, and priority SOS assistance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
