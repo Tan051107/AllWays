@@ -32,13 +32,14 @@ interface ItineraryViewProps {
   planningTravelerCount: number;
   viewerRole: 'host' | 'participant';
   onCreateTrip: () => void;
+  initialViewMode?: 'overview' | 'details';
 }
 
-export const ItineraryView: React.FC<ItineraryViewProps> = ({ activeTripId, onTripChange, planningTravelerCount, viewerRole, onCreateTrip }) => {
+export const ItineraryView: React.FC<ItineraryViewProps> = ({ activeTripId, onTripChange, planningTravelerCount, viewerRole, onCreateTrip, initialViewMode = 'details' }) => {
   const [selectedDay, setSelectedDay] = useState<'day1' | 'day2' | 'day3'>('day1');
   const [stops, setStops] = useState<ItineraryStop[]>(ITINERARY_STOPS);
   const [expandedRationale, setExpandedRationale] = useState<string | null>('stop-5');
-  const [viewMode, setViewMode] = useState<'overview' | 'details'>('details');
+  const [viewMode, setViewMode] = useState<'overview' | 'details'>(initialViewMode);
   const [planningStage, setPlanningStage] = useState<'planning' | 'review' | 'accommodation' | 'confirmed'>('planning');
   const [planningStops, setPlanningStops] = useState<Record<'day1' | 'day2' | 'day3', ItineraryStop[]>>(PLANNING_STOPS_BY_DAY);
   const [selectedStay, setSelectedStay] = useState<string | null>(null);
@@ -146,7 +147,7 @@ export const ItineraryView: React.FC<ItineraryViewProps> = ({ activeTripId, onTr
       {isPlanningTrip && planningStage !== 'confirmed' && planningStage !== 'planning' && <section className="rounded-2xl border border-[#eadeda] bg-white p-4">
         <div><p className="text-[10px] font-extrabold uppercase tracking-wide text-[#aa2f1f]">Trip status</p><p className="mt-1 text-[14px] font-extrabold text-stone-900">{planningLabel}</p></div>
         {isHostView && groupInputCount > 0 && <p className="mt-2 text-[11px] font-extrabold text-[#006c51]">{groupInputCount} group input{groupInputCount === 1 ? '' : 's'} to review in the itinerary below</p>}
-        {planningStage === 'review' && <><p className="mt-2 text-[12px] font-medium leading-relaxed text-stone-600">3 of 4 travelers responded. The trip lead can proceed now; anyone unavailable can still comment later.</p><button onClick={() => setPlanningStage('accommodation')} className="mt-3 w-full rounded-full bg-[#aa2f1f] py-2.5 text-[12px] font-extrabold text-white">Confirm itinerary</button></>}
+        {planningStage === 'review' && <><p className="mt-2 text-[12px] font-medium leading-relaxed text-stone-600">3 of 4 travelers responded. The trip lead can proceed now</p><button onClick={() => setPlanningStage('accommodation')} className="mt-3 w-full rounded-full bg-[#aa2f1f] py-2.5 text-[12px] font-extrabold text-white">Confirm itinerary</button></>}
         {planningStage === 'accommodation' && <div className="mt-3 space-y-2"><p className="text-[12px] font-medium leading-relaxed text-stone-600">Choose a stay to confirm your trip.</p>{[['Georgetown accessible suite', 'Near the Day 1 route • accessible-room request'], ['Gurney Drive step-free hotel', 'Elevator access • quiet-room request']].map(([name, detail]) => <button key={name} onClick={() => setSelectedStay(name)} className={`w-full rounded-xl border p-3 text-left ${selectedStay === name ? 'border-[#006c51] bg-[#edfbf7]' : 'border-[#eadeda]'}`}><p className="text-[12px] font-extrabold text-stone-900">{name}</p><p className="mt-0.5 text-[11px] font-medium text-stone-500">{detail}</p></button>)}<button disabled={!selectedStay} onClick={() => setPlanningStage('confirmed')} className={`w-full rounded-full py-2.5 text-[12px] font-extrabold ${selectedStay ? 'bg-[#006c51] text-white' : 'bg-stone-200 text-stone-500'}`}>{selectedStay ? 'Confirm trip' : 'Choose a stay to confirm trip'}</button></div>}
       </section>}
 

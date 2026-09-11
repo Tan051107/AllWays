@@ -13,6 +13,7 @@ import { OffRouteModal } from './components/OffRouteModal';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<TabType>('home');
+  const [itineraryViewMode, setItineraryViewMode] = useState<'overview' | 'details'>('overview');
   const [activeTripId, setActiveTripId] = useState('tokyo');
   const [planningTravelerCount, setPlanningTravelerCount] = useState(3);
   const [accountRole, setAccountRole] = useState<'host' | 'participant'>('host');
@@ -22,6 +23,21 @@ export default function App() {
   const [isSosOpen, setIsSosOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [showTripCreator, setShowTripCreator] = useState(false);
+
+  const handleSelectTab = (tab: TabType) => {
+    // Entering the itinerary via navigation should show the list of travel plans,
+    // not jump straight into a single trip's schedule.
+    if (tab === 'itinerary') {
+      setItineraryViewMode('overview');
+    }
+    setCurrentTab(tab);
+  };
+
+  const openTripItinerary = (tripId: string) => {
+    setActiveTripId(tripId);
+    setItineraryViewMode('details');
+    setCurrentTab('itinerary');
+  };
 
   const handleAddExpense = (newExpense: ExpenseItem) => {
     setExpenses([newExpense, ...expenses]);
@@ -61,8 +77,8 @@ export default function App() {
 
         {/* Tab Content Area */}
         <main className="flex-1 flex flex-col overflow-y-auto">
-          {currentTab === 'home' && <HomeProfileView onDraftCreated={setPlanningTravelerCount} onOpenPlanning={() => { setActiveTripId('penang'); setCurrentTab('itinerary'); }} onOpenTokyoItinerary={() => { setActiveTripId('tokyo'); setCurrentTab('itinerary'); }} onNavigate={setCurrentTab} showTripCreator={showTripCreator} onTripCreatorShown={() => setShowTripCreator(false)} />}
-          {currentTab === 'itinerary' && <ItineraryView activeTripId={activeTripId} onTripChange={setActiveTripId} planningTravelerCount={planningTravelerCount} viewerRole={accountRole} onCreateTrip={() => { setShowTripCreator(true); setCurrentTab('home'); }} />}
+          {currentTab === 'home' && <HomeProfileView onDraftCreated={setPlanningTravelerCount} onOpenPlanning={() => openTripItinerary('penang')} onOpenTokyoItinerary={() => openTripItinerary('tokyo')} onNavigate={handleSelectTab} showTripCreator={showTripCreator} onTripCreatorShown={() => setShowTripCreator(false)} />}
+          {currentTab === 'itinerary' && <ItineraryView activeTripId={activeTripId} onTripChange={setActiveTripId} planningTravelerCount={planningTravelerCount} viewerRole={accountRole} onCreateTrip={() => { setShowTripCreator(true); setCurrentTab('home'); }} initialViewMode={itineraryViewMode} />}
           {currentTab === 'today' && <TodayView />}
           {currentTab === 'wallet' && (
             <WalletView
@@ -81,7 +97,7 @@ export default function App() {
         </main>
 
         {/* Persistent Bottom Navigation */}
-        <BottomNav currentTab={currentTab} onSelectTab={setCurrentTab} />
+        <BottomNav currentTab={currentTab} onSelectTab={handleSelectTab} />
 
         {/* Emergency Assistance Modal */}
         <EmergencySosModal isOpen={isSosOpen} onClose={() => setIsSosOpen(false)} />

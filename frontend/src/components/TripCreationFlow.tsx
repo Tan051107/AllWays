@@ -1,29 +1,152 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { rankDestinations, RankedDestination } from '../data/suggestedDestinations';
 
 type TripCreationFlowProps = { onClose: () => void; onDraftCreated: (travelerCount: number) => void; onOpenPlanning: () => void };
 
 const Toggle = ({ checked, onChange }: { checked: boolean; onChange: (checked: boolean) => void }) => <button type="button" onClick={() => onChange(!checked)} className={`relative h-7 w-12 rounded-full transition ${checked ? 'bg-[#aa2f1f]' : 'bg-stone-300'}`} aria-pressed={checked}><span className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm transition ${checked ? 'left-6' : 'left-1'}`} /></button>;
 
+/** Whole days between two YYYY-MM-DD dates (inclusive of the trip length). Falls back to 3 if invalid. */
+const computeDays = (startDate: string, endDate: string): number => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 3;
+  const diffMs = end.getTime() - start.getTime();
+  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24)) + 1;
+  return diffDays > 0 ? diffDays : 3;
+};
+
+/** Parse the free-text budget field (e.g. "1,200") into a number. */
+const parseBudget = (value: string): number => {
+  const parsed = Number(value.replace(/[^0-9.]/g, ''));
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+type DestinationSuggestionSheetProps = {
+  days: number;
+  participants: number;
+  budget: number;
+  onSelect: (destinationName: string, suggestedTripName: string) => void;
+  onClose: () => void;
+};
+
+const DestinationSuggestionSheet: React.FC<DestinationSuggestionSheetProps> = ({ days, participants, budget, onSelect, onClose }) => {
+  const [isThinking, setIsThinking] = useState(true);
+  const [results, setResults] = useState<RankedDestination[]>([]);
+
+  useEffect(() => {
+    // Mocked "AI" thinking delay — no real API call. Ranking is deterministic.
+    const timer = setTimeout(() => {
+      setResults(rankDestinations({ days, participants, budget }).slice(0, 4));
+      setIsThinking(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [days, participants, budget]);
+
+  const budgetLabel = budget > 0 ? `RM ${budget.toLocaleString()}` : 'flexible budget';
+
+  return (
+    <div className="fixed inset-x-0 bottom-0 z-[70] flex h-screen items-end bg-stone-900/40 md:left-1/2 md:right-auto md:w-[448px] md:-translate-x-1/2" onClick={onClose}>
+      <section className="flex max-h-[88dvh] w-full flex-col rounded-t-[30px] bg-[#fef8f4] shadow-[0_-12px_36px_rgba(38,27,23,0.24)]" onClick={(event) => event.stopPropagation()}>
+        <div className="relative shrink-0 px-5 pb-3 pt-4">
+          <div className="absolute left-1/2 top-3 h-1.5 w-11 -translate-x-1/2 rounded-full bg-stone-300" />
+          <div className="mt-4 flex items-start justify-between">
+            <div>
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#006c51]">Waylo suggestions</p>
+              <h1 className="text-[19px] font-extrabold tracking-tight text-stone-900">Where should you go?</h1>
+              <p className="mt-1 text-[11px] font-medium text-stone-500">Based on {days} {days === 1 ? 'day' : 'days'} • {participants} {participants === 1 ? 'traveler' : 'travelers'} • {budgetLabel}</p>
+            </div>
+            <button onClick={onClose} aria-label="Close suggestions" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f3ede9] text-stone-600"><span className="material-symbols-outlined">close</span></button>
+          </div>
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6">
+          {isThinking ? (
+            <div className="flex flex-col items-center justify-center gap-3 py-12">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#006c51] text-[13px] font-black text-white">
+                <span className="material-symbols-outlined animate-spin text-[22px]">progress_activity</span>
+              </span>
+              <p className="text-[13px] font-extrabold text-stone-900">Waylo is finding matches…</p>
+              <p className="text-[11px] font-medium text-stone-500">Weighing trip length, group size and budget.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {results.map((destination, index) => (
+                <button
+                  key={destination.id}
+                  type="button"
+                  onClick={() => onSelect(destination.name, destination.suggestedTripNameTemplate)}
+                  className="w-full overflow-hidden rounded-2xl border border-[#eadeda] bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:scale-[0.99]"
+                >
+                  <div className={`h-1.5 ${index === 0 ? 'bg-[#006c51]' : index === 1 ? 'bg-[#aa2f1f]' : 'bg-[#d6a510]'}`} />
+                  <div className="p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="text-[15px] font-extrabold tracking-tight text-stone-900">{destination.name}</p>
+                          {index === 0 && <span className="rounded-full bg-[#dffbed] px-2 py-0.5 text-[9px] font-extrabold text-[#006c51]">TOP MATCH</span>}
+                        </div>
+                        <p className="mt-0.5 text-[11px] font-semibold text-stone-500">{destination.country} • {destination.idealDaysMin}–{destination.idealDaysMax} days</p>
+                      </div>
+                      <span className="flex items-center gap-1 rounded-full bg-[#f3ede9] px-2 py-1 text-[10px] font-extrabold text-stone-700"><span className="material-symbols-outlined text-[13px] text-[#006c51]">check_circle</span>{destination.score}%</span>
+                    </div>
+                    <p className="mt-2 text-[12px] font-medium leading-relaxed text-stone-600">{destination.rationale}</p>
+                    <div className="mt-3 flex items-center justify-between border-t border-[#eee5e1] pt-3">
+                      <span className="flex items-center gap-1 text-[10px] font-bold text-[#006c51]"><span className="material-symbols-outlined text-[14px]">accessible</span>Accessible-friendly city</span>
+                      <span className="flex items-center gap-1 text-[12px] font-extrabold text-[#aa2f1f]">Use this <span className="material-symbols-outlined text-[16px]">arrow_forward</span></span>
+                    </div>
+                  </div>
+                </button>
+              ))}
+              <p className="px-1 pt-1 text-[10px] font-medium leading-relaxed text-stone-400">Attraction-level accessibility is checked later when Waylo builds the itinerary.</p>
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+};
+
 export const TripCreationFlow: React.FC<TripCreationFlowProps> = ({ onClose, onDraftCreated, onOpenPlanning }) => {
   const [step, setStep] = useState(1);
-  const [tripName, setTripName] = useState('Penang Food Weekend');
-  const [destination, setDestination] = useState('Penang, Malaysia');
+  const [tripName, setTripName] = useState('');
+  const [destination, setDestination] = useState('');
+  const [startDate, setStartDate] = useState('2026-06-07');
+  const [endDate, setEndDate] = useState('2026-06-09');
   const [budget, setBudget] = useState('1,200');
   const [travelerCount, setTravelerCount] = useState(3);
   const [wheelchair, setWheelchair] = useState(true);
   const [elevator, setElevator] = useState(true);
   const [restroom, setRestroom] = useState(true);
+  const [isSuggestOpen, setIsSuggestOpen] = useState(false);
   const titles = ['Trip basics', 'Host preferences'];
   const next = () => setStep((current) => Math.min(2, current + 1));
   const previous = () => setStep((current) => Math.max(1, current - 1));
+
+  const handleSuggestionSelect = (destinationName: string, suggestedTripName: string) => {
+    setDestination(destinationName);
+    setTripName(suggestedTripName);
+    setIsSuggestOpen(false);
+  };
+
+  // "Not sure where to go?" needs the inputs that drive ranking: valid dates,
+  // a budget, and a traveler count. Destination itself is intentionally excluded
+  // since that's what the suggestions provide.
+  const hasValidDates =
+    Boolean(startDate) &&
+    Boolean(endDate) &&
+    !Number.isNaN(new Date(startDate).getTime()) &&
+    !Number.isNaN(new Date(endDate).getTime()) &&
+    new Date(endDate).getTime() >= new Date(startDate).getTime();
+  const canSuggest = hasValidDates && parseBudget(budget) > 0 && travelerCount >= 1;
 
   return <div className="fixed inset-x-0 bottom-0 z-[60] flex h-screen items-end bg-stone-900/30 md:left-1/2 md:right-auto md:w-[448px] md:-translate-x-1/2"><section className="flex max-h-[94dvh] w-full flex-col rounded-t-[30px] bg-[#fef8f4] shadow-[0_-12px_36px_rgba(38,27,23,0.24)]">
     <div className="relative flex shrink-0 items-center justify-between px-5 pb-3 pt-4"><div className="absolute left-1/2 top-3 h-1.5 w-11 -translate-x-1/2 rounded-full bg-stone-300" /><div className="mt-4"><p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#aa2f1f]">Create a trip</p><h1 className="text-[19px] font-extrabold tracking-tight text-stone-900">{titles[step - 1]}</h1></div><button onClick={onClose} aria-label="Close trip creation" className="mt-4 flex h-9 w-9 items-center justify-center rounded-full bg-[#f3ede9] text-stone-600"><span className="material-symbols-outlined">close</span></button></div>
     <div className="grid shrink-0 grid-cols-2 gap-1 px-5 pb-4">{titles.map((title, index) => <div key={title}><div className={`h-1.5 rounded-full ${index < step ? 'bg-[#aa2f1f]' : 'bg-[#e7e1de]'}`} /><p className={`mt-1 text-center text-[8px] font-bold ${index + 1 === step ? 'text-[#aa2f1f]' : 'text-stone-400'}`}>{title}</p></div>)}</div>
     <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5">
-      {step === 1 && <div className="rounded-2xl border border-[#eadeda] bg-white p-4"><p className="text-[11px] font-extrabold uppercase tracking-wide text-[#006c51]">Start a planning draft</p><p className="mt-1 text-[12px] font-medium leading-relaxed text-stone-600">This saves a trip immediately. You can invite others and refine the plan later.</p><div className="mt-4 space-y-3"><label className="block text-[12px] font-bold text-stone-700">Trip name<input value={tripName} onChange={(event) => setTripName(event.target.value)} className="mt-1.5 w-full rounded-xl border border-[#e4d8d4] bg-[#fdfaf8] px-3 py-2.5 text-[13px] font-semibold" /></label><label className="block text-[12px] font-bold text-stone-700">Destination<input value={destination} onChange={(event) => setDestination(event.target.value)} className="mt-1.5 w-full rounded-xl border border-[#e4d8d4] bg-[#fdfaf8] px-3 py-2.5 text-[13px] font-semibold" /></label><div className="grid grid-cols-2 gap-3"><label className="text-[12px] font-bold text-stone-700">Start date<input type="date" defaultValue="2026-06-07" className="mt-1.5 w-full rounded-xl border border-[#e4d8d4] bg-[#fdfaf8] px-2 py-2.5 text-[12px]" /></label><label className="text-[12px] font-bold text-stone-700">End date<input type="date" defaultValue="2026-06-09" className="mt-1.5 w-full rounded-xl border border-[#e4d8d4] bg-[#fdfaf8] px-2 py-2.5 text-[12px]" /></label></div><label className="block text-[12px] font-bold text-stone-700">Budget (RM)<input value={budget} onChange={(event) => setBudget(event.target.value)} className="mt-1.5 w-full rounded-xl border border-[#e4d8d4] bg-[#fdfaf8] px-3 py-2.5 text-[13px] font-semibold" /></label><label className="block text-[12px] font-bold text-stone-700">Number of travelers <span className="font-medium text-stone-400">(including you)</span><input type="number" min="1" max="12" value={travelerCount} onChange={(event) => setTravelerCount(Math.max(1, Math.min(12, Number(event.target.value) || 1)))} className="mt-1.5 w-full rounded-xl border border-[#e4d8d4] bg-[#fdfaf8] px-3 py-2.5 text-[13px] font-semibold" /></label></div></div>}
+      {step === 1 && <div className="rounded-2xl border border-[#eadeda] bg-white p-4"><p className="text-[11px] font-extrabold uppercase tracking-wide text-[#006c51]">Start a planning draft</p><p className="mt-1 text-[12px] font-medium leading-relaxed text-stone-600">This saves a trip immediately. You can invite others and refine the plan later.</p><div className="mt-4 space-y-3"><label className="block text-[12px] font-bold text-stone-700">Trip name<input value={tripName} onChange={(event) => setTripName(event.target.value)} placeholder="e.g. Weekend getaway" className="mt-1.5 w-full rounded-xl border border-[#e4d8d4] bg-[#fdfaf8] px-3 py-2.5 text-[13px] font-semibold" /></label><div><div className="flex items-center justify-between"><label htmlFor="trip-destination" className="text-[12px] font-bold text-stone-700">Destination</label><button type="button" onClick={() => canSuggest && setIsSuggestOpen(true)} disabled={!canSuggest} title={canSuggest ? 'Get destination suggestions' : 'Enter dates, budget and travelers first'} className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-extrabold transition ${canSuggest ? 'bg-[#edfbf7] text-[#006c51] active:scale-95' : 'cursor-not-allowed bg-stone-100 text-stone-400'}`}><span className="material-symbols-outlined text-[14px]">auto_awesome</span>Not sure where to go?</button></div><input id="trip-destination" value={destination} onChange={(event) => setDestination(event.target.value)} placeholder="Where to?" className="mt-1.5 w-full rounded-xl border border-[#e4d8d4] bg-[#fdfaf8] px-3 py-2.5 text-[13px] font-semibold" />{!canSuggest && <p className="mt-1 text-[10px] font-medium text-stone-400">Add dates, budget and travelers to get suggestions.</p>}</div><div className="grid grid-cols-2 gap-3"><label className="text-[12px] font-bold text-stone-700">Start date<input type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} className="mt-1.5 w-full rounded-xl border border-[#e4d8d4] bg-[#fdfaf8] px-2 py-2.5 text-[12px]" /></label><label className="text-[12px] font-bold text-stone-700">End date<input type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} className="mt-1.5 w-full rounded-xl border border-[#e4d8d4] bg-[#fdfaf8] px-2 py-2.5 text-[12px]" /></label></div><label className="block text-[12px] font-bold text-stone-700">Budget (RM)<input value={budget} onChange={(event) => setBudget(event.target.value)} className="mt-1.5 w-full rounded-xl border border-[#e4d8d4] bg-[#fdfaf8] px-3 py-2.5 text-[13px] font-semibold" /></label><label className="block text-[12px] font-bold text-stone-700">Number of travelers <span className="font-medium text-stone-400">(including you)</span><input type="number" min="1" max="12" value={travelerCount} onChange={(event) => setTravelerCount(Math.max(1, Math.min(12, Number(event.target.value) || 1)))} className="mt-1.5 w-full rounded-xl border border-[#e4d8d4] bg-[#fdfaf8] px-3 py-2.5 text-[13px] font-semibold" /></label></div></div>}
       {step === 2 && <div className="space-y-4"><div className="rounded-2xl border border-[#eadeda] bg-white p-4"><div className="flex items-center justify-between"><div><p className="text-[11px] font-extrabold uppercase tracking-wide text-[#aa2f1f]">Your accessibility & comfort</p><p className="mt-1 text-[12px] font-medium text-stone-500">Saved as this trip’s planning rules.</p></div><span className="material-symbols-outlined text-[#aa2f1f]">verified_user</span></div><div className="mt-4 space-y-2">{[[wheelchair, setWheelchair, 'I use a wheelchair', 'Wide turns, flat thresholds and ramps'], [elevator, setElevator, 'Elevator for all transfers', 'No stairs or inaccessible stations'], [restroom, setRestroom, 'Accessible restroom nearby', 'Within 5–10 minutes of major stops']].map(([checked, setChecked, title, description]) => <div key={String(title)} className="flex items-center gap-3 rounded-xl bg-[#f8f2ef] p-3"><span className="material-symbols-outlined text-[#aa2f1f]">{title === 'I use a wheelchair' ? 'accessible' : title === 'Elevator for all transfers' ? 'elevator' : 'wc'}</span><div className="min-w-0 flex-1"><p className="text-[13px] font-extrabold text-stone-900">{String(title)}</p><p className="text-[11px] font-medium text-stone-500">{String(description)}</p></div><Toggle checked={Boolean(checked)} onChange={setChecked as (value: boolean) => void} /></div>)}</div></div><div className="rounded-2xl bg-[#e0f9ed] p-4"><p className="text-[13px] font-extrabold text-[#006c51]">Invite the group after creating</p><p className="mt-1 text-[12px] font-medium leading-relaxed text-[#285c4d]">Others can add needs and preferences from the planning workspace.</p></div></div>}
     </div>
     <div className="flex shrink-0 gap-3 border-t border-[#eadeda] bg-white px-5 py-4">{step > 1 && <button onClick={previous} className="rounded-full border border-[#d9ccc7] px-4 py-3 text-[13px] font-extrabold text-stone-700">Back</button>}<button onClick={step === 1 ? () => { onDraftCreated(travelerCount); next(); } : onOpenPlanning} className="flex flex-1 items-center justify-center gap-1 rounded-full bg-[#aa2f1f] px-4 py-3 text-[13px] font-extrabold text-white shadow-sm active:scale-[0.98]">{step === 1 ? 'Create draft' : 'Generate draft itinerary'}<span className="material-symbols-outlined text-[18px]">arrow_forward</span></button></div>
+    {isSuggestOpen && <DestinationSuggestionSheet days={computeDays(startDate, endDate)} participants={travelerCount} budget={parseBudget(budget)} onSelect={handleSuggestionSelect} onClose={() => setIsSuggestOpen(false)} />}
   </section></div>;
 };
