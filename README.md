@@ -60,7 +60,7 @@ Developed as an Android application using React Native, the platform leverages a
 | **Group Review & Voting & Adjustment** | Members review the plan to vote, swap, or remove activities, with compliant alternatives offered whenever changes are made. |
 | **Agent Searches & Prepares Bookings** | AI agents compare travel options via APIs, pre-fill booking details on external sites to reduce manual errors, and present direct booking links for users to review and pay. |
 | **System Set Individual Trip Budget** | Stores individual budgets, compares them against estimated itinerary costs, and reserves portions for leisure, shopping, and contingency funds. |
-| **Personal Expense Tracking via Receipt Scanning** | Tracks spending automatically through digital receipts detected from emails or via manual entry, dynamically updating the remaining personal budget. |
+| **Personal Expense Tracking via Receipt Scanning** | Tracks spending automatically through uploaded receipts or via manual entry, dynamically updating the remaining personal budget. |
 | **Record Shared Expense & Debt Settlement** | Users upload receipts for shared costs, select which members consumed specific items, and let the system calculate tax and tip to generate precise settlements. |
 | **Predictive Budget Guard & Budget Rescue** | Projects total trip costs, alerts users about overspending risk, and offers an automated itinerary replan. |
 | **Real-Time Reminder Engine** | Generates notifications for activities, departure times, booking and ticket details, rest breaks, and accessibility alerts. |
