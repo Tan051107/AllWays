@@ -1,1 +1,4 @@
 .history/
+
+# Internal documentation (not for public repo)
+docs/*.docx
