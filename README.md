@@ -12,7 +12,7 @@ Each screen below is framed as a **problem** the group faces and the **solution*
 
 ### 1. Host Preferences — Accessibility as a first-class trip setting
 
-<img src="docs/screens/01-host-preferences.png" alt="Host Preferences screen showing accessibility toggles" width="320" />
+<img src="docs/screens/01-host-preferences.png" alt="Host Preferences screen showing accessibility toggles" width="553" />
 
 **Problem:** Group trips usually treat accessibility as an afterthought. By the time someone realizes a station has no elevator or a restaurant has stairs, the plan is already locked in and hard to change.
 
@@ -22,7 +22,7 @@ Each screen below is framed as a **problem** the group faces and the **solution*
 
 ### 2. Today View — Live, adaptive daily guidance
 
-<img src="docs/screens/02-today-view.png" alt="Today View showing schedule, disruption alert, and adaptive timing" width="320" />
+<img src="docs/screens/02-today-view.png" alt="Today View showing schedule, disruption alert, and adaptive timing" width="370" />
 
 **Problem:** A carefully planned accessible route can break in real time — an elevator goes out of service and suddenly the "planned" path includes 24 stairs the group can't use.
 
@@ -32,7 +32,7 @@ Each screen below is framed as a **problem** the group faces and the **solution*
 
 ### 3. Itinerary Planning — Collaborative, review-before-apply planning
 
-<img src="docs/screens/03-itinerary-planning.png" alt="Itinerary planning screen for Penang Food Weekend with invite and Waylo suggestions" width="320" />
+<img src="docs/screens/03-itinerary-planning.png" alt="Itinerary planning screen for Penang Food Weekend with invite and Waylo suggestions" width="503" />
 
 **Problem:** Coordinating a group itinerary means endless back-and-forth, and it's easy to add a stop that quietly doesn't work for someone's accessibility needs.
 
@@ -42,7 +42,7 @@ Each screen below is framed as a **problem** the group faces and the **solution*
 
 ### 4. Budget & Savings — Cutting cost without cutting accessibility
 
-<img src="docs/screens/04-budget-savings.png" alt="Budget and savings screen with AI budget rescue and protected accessibility items" width="320" />
+<img src="docs/screens/04-budget-savings.png" alt="Budget and savings screen with AI budget rescue and protected accessibility items" width="277" />
 
 **Problem:** When a group goes over budget, the easiest things to cut are often the accessible options — the step-free van, the wider-clearance restaurant — which quietly excludes members.
 
@@ -52,7 +52,7 @@ Each screen below is framed as a **problem** the group faces and the **solution*
 
 ### 5. Add Shared Expense — Fair, flexible cost splitting
 
-<img src="docs/screens/05-shared-expense.png" alt="Shared expense screen with custom split and receipt scanning" width="320" />
+<img src="docs/screens/05-shared-expense.png" alt="Shared expense screen with custom split and receipt scanning" width="365" />
 
 **Problem:** Splitting group costs is fiddly and error-prone — not everyone shares every expense equally, and manual entry invites mistakes and disputes.
 
@@ -62,7 +62,7 @@ Each screen below is framed as a **problem** the group faces and the **solution*
 
 ### 6. Settlement Details — Transparent, minimized debt settlement
 
-<img src="docs/screens/06-settlement.png" alt="Settlement details screen showing who owes whom and route minimization" width="320" />
+<img src="docs/screens/06-settlement.png" alt="Settlement details screen showing who owes whom and route minimization" width="554" />
 
 **Problem:** After a group trip, everyone owes everyone a little, producing a tangle of tiny payments that are confusing and easy to lose track of.
 
@@ -72,7 +72,7 @@ Each screen below is framed as a **problem** the group faces and the **solution*
 
 ### 7. Group Member Offline — Proactive safety check-ins
 
-<img src="docs/screens/07-member-offline.png" alt="Group member offline safety dialog with escalation options" width="320" />
+<img src="docs/screens/07-member-offline.png" alt="Group member offline safety dialog with escalation options" width="552" />
 
 **Problem:** In an unfamiliar city, a group member can fall behind or lose connection, and no one notices until it's genuinely worrying.
 
@@ -82,7 +82,7 @@ Each screen below is framed as a **problem** the group faces and the **solution*
 
 ### 8. Off-Route Divergence Alert — Automatic safety integrity checks
 
-<img src="docs/screens/08-off-route-alert.png" alt="Off-route divergence alert with auto-escalation timer and PIN confirmation" width="320" />
+<img src="docs/screens/08-off-route-alert.png" alt="Off-route divergence alert with auto-escalation timer and PIN confirmation" width="532" />
 
 **Problem:** Straying from a verified step-free corridor into an unmapped stair sector can leave a traveler stuck or in danger, with no built-in safeguard.
 
