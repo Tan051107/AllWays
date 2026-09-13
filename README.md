@@ -5,11 +5,12 @@
 AllWays is an inclusive, AI-powered group travel ecosystem that synchronizes itineraries, manages shared finances, and ensures real-time safety. Unlike traditional travel apps, AllWays treats physical accessibility and user fatigue as non-negotiable baseline constraints, dynamically adjusting plans so every member of a group can travel comfortably.
 
 **Team: Make Things Work** — Tan Yik Yang, Pat Yoon Xin, Lim Pei En, Jasmine Chin Jia Yee
+
 **Problem Statement:** Travel Planner
 
-- 🎥 **Video Presentation:** https://youtu.be/3VEqc3Pg-Dg
-- 🖼️ **Presentation Slides:** https://canva.link/kxj3nuiawmub8sa
-- 🚀 **Prototype:** https://all-ways-two.vercel.app/
+- 🎥 **Video Presentation:** [Watch on YouTube](https://youtu.be/3VEqc3Pg-Dg)
+- 🖼️ **Presentation Slides:** [View on Canva](https://canva.link/kxj3nuiawmub8sa)
+- 🚀 **Prototype:** [Open Live Demo](https://all-ways-two.vercel.app/)
 
 ---
 
@@ -86,7 +87,7 @@ Developed as an Android application using React Native, the platform leverages a
 
 ### 2.2 Ideation Boards
 
-**Mindmap Board:** https://boardmix.com/app/share/CAE.CJa27wIgASoQ4uG1D6R72XAqxlZfLJA1vzAGQAE/dJYjho
+**Mindmap Board:** [View on Boardmix](https://boardmix.com/app/share/CAE.CJa27wIgASoQ4uG1D6R72XAqxlZfLJA1vzAGQAE/dJYjho)
 
 <p align="center">
   <img src="docs/mindmap/mindmap.png" alt="AllWays Mindmap Board" />
