@@ -560,7 +560,7 @@ export const WalletView: React.FC<WalletViewProps> = ({
               setSplitScope('items');
               showToast('Receipt scanned — review the suggested details');
             }} />
-            <span className={`material-symbols-outlined flex h-9 w-9 items-center justify-center rounded-xl ${receiptName ? 'bg-white text-[#006c51]' : 'bg-white text-[#eb5e49]'}`}>{receiptName ? 'receipt_long' : 'photo_camera'}</span>
+            <span className={`material-symbols-outlined flex h-9 w-9 shrink-0 items-center justify-center rounded-xl leading-none text-[20px] ${receiptName ? 'bg-white text-[#006c51]' : 'bg-white text-[#eb5e49]'}`}>{receiptName ? 'receipt_long' : 'photo_camera'}</span>
             <span className="min-w-0 flex-1"><span className={`block text-[12px] font-extrabold ${receiptName ? 'text-[#006c51]' : 'text-stone-900'}`}>{receiptName ? 'Receipt ready to review' : 'Scan or upload a receipt'}</span><span className="mt-0.5 block truncate text-[10px] font-medium text-stone-500">{receiptName ?? 'We’ll suggest the title, amount, category, and date.'}</span></span>
             <span className="text-[10px] font-extrabold text-[#eb5e49]">{receiptName ? 'Change' : 'Upload'}</span>
           </label>
