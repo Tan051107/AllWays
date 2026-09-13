@@ -110,13 +110,13 @@ Developed as an Android application using React Native, the platform leverages a
 
 The prototype covers the full accessible group-travel journey — from setting up the trip, to living through it day by day, to settling up afterward.
 
-### 3.1 Host Preferences — Accessibility as a first-class trip setting
+### 3.1 Accessibility Preferences — Accessibility as a first-class trip setting
 
 <p align="center">
   <img src="docs/screens/01-host-preferences.png" alt="Host Preferences screen showing accessibility toggles" width="240" />
 </p>
 
-Group travel often ignores accessibility until it's too late. AllWays flips that: the host defines mobility and comfort needs upfront, the app generates a step-free draft itinerary, and the group adds their own needs from a shared planning workspace.
+Group travel often ignores accessibility until it's too late. AllWays flips that: the participants define mobility and comfort needs upfront, the app generates a step-free draft itinerary, and the group adds their own needs from a shared planning workspace.
 
 ### 3.2 Today View — Live, adaptive daily guidance
 
@@ -132,7 +132,7 @@ A carefully planned accessible route can break in real time. AllWays watches the
   <img src="docs/screens/03-itinerary-planning.png" alt="Itinerary planning screen for Penang Food Weekend with invite and Waylo suggestions" width="240" />
 </p>
 
-Coordinating a group itinerary is endless back-and-forth, and it's easy to add a stop that quietly doesn't work for someone. AllWays gives each trip a shared planning workspace with an invite code and profile tracking, lets travelers ask Waylo to adjust a day before changes are applied, and flags accessibility on every stop with an explicit confirmation step.
+Coordinating a group itinerary is endless back-and-forth, and it's easy to add a stop that quietly doesn't work for someone. AllWays gives each trip a shared planning workspace that lets travelers ask Waylo to adjust a day before changes are applied, and flags accessibility on every stop with an explicit confirmation step.
 
 ### 3.4 Budget & Savings — Cutting cost without cutting accessibility
 
