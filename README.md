@@ -2,8 +2,6 @@
 
 **Accessible group travel, planned around everyone's needs — not the average traveler's.**
 
-AllWays is an inclusive, AI-powered group travel ecosystem that synchronizes itineraries, manages shared finances, and ensures real-time safety. Unlike traditional travel apps, AllWays treats physical accessibility and user fatigue as non-negotiable baseline constraints, dynamically adjusting plans so every member of a group can travel comfortably.
-
 **Team: Make Things Work** — Tan Yik Yang, Pat Yoon Xin, Lim Pei En, Jasmine Chin Jia Yee
 
 **Problem Statement:** Travel Planner
