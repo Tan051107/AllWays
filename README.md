@@ -1,7 +1,5 @@
 # AllWays: Accessible Group Travel Planner
 
-**Accessible group travel, planned around everyone's needs — not the average traveler's.**
-
 **Team: Make Things Work** — Tan Yik Yang, Pat Yoon Xin, Lim Pei En, Jasmine Chin Jia Yee
 
 **Problem Statement:** Travel Planner
