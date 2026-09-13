@@ -108,7 +108,7 @@ Developed as an Android application using React Native, the platform leverages a
 
 ## 3. Design & Prototype
 
-The prototype covers the full accessible group-travel journey — from setting up the trip, to living through it day by day, to settling up afterward. Each screen below pairs the interface with the problem it solves.
+The prototype covers the full accessible group-travel journey — from setting up the trip, to living through it day by day, to settling up afterward.
 
 ### 3.1 Host Preferences — Accessibility as a first-class trip setting
 
